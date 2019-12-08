@@ -75,6 +75,12 @@ $(function(){
           $('.user_center_link > img, .user_info > img').attr('src', res.data.userPic);
         }
     })
+    $('.logout').on('click',function(){
+        // 删除token
+        localStorage.removeItem('token');// removeItem(移除本地)
+        // 跳转到登录页面
+        window.location.href = './login.html';
+    })
 
     //  原生ajax
     // let xhr = new XMLHttpRequest();
