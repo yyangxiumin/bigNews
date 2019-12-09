@@ -88,7 +88,7 @@ $(function(){
     $('.level01').on('click', function(){
         // 排他思想
         $(this).addClass('active').siblings().removeClass('active');
-        // 判断点击的是否是文件管理
+        // 判断点击的是否是文章管理
         if($(this).index() == 1){
             // console.log(123);
             // $(this).siblings('.level02').slideToggle();
@@ -102,7 +102,8 @@ $(function(){
             //点击这个div的时候，让其后面的箭头符号进行旋转，我们是通过添加一个类名的方式来处理
             $(this).find('b').toggleClass('rotate0');
         } else {
-            $('.level02 > li > a').removeClass('active');
+            // 如果点击不是文章管理就把二级列表的active移除
+            $('.level02 > li').removeClass('active');
         }
     })
 
