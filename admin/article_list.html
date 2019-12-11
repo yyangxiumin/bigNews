@@ -109,7 +109,25 @@ $(function(){
             }
         }
     })
-
+    
+    let mypage = 1;
+    let perpage = 10;
+    $.get({
+        url : BigNew.article_query,
+        data : {
+            type : $('#selCategory').val(),
+            state : $('#selStatus').val(),
+            page : mypage,
+            perpage : perpage,
+        },
+       success : function(res) {
+        //    console.log(res);
+        if(res.code == 200){
+            let html = template('artList', res);
+            $('tbody').html(html);
+        }
+       }
+    })
 
 
 
