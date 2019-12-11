@@ -1,55 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>文章列表</title>
-    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/iconfont.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/iconfont.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container-fluid">
-        <div class="common_title">
-            文章类别管理
-        </div>
-        <div class="container-fluid common_con">
-            <table class="table table-striped table-bordered table-hover mp20 category_table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>Slug</th>
-                        <th class="text-center" width="100">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+      <div class="common_title">
+        文章类别管理
+      </div>
+      <div class="container-fluid common_con">
+        <table
+          class="table table-striped table-bordered table-hover mp20 category_table"
+        >
+          <thead>
+            <tr>
+              <th>名称</th>
+              <th>Slug</th>
+              <th class="text-center" width="100">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
                         <td>奇趣事</td>
                         <td>funny</td>
                         <td class="text-center">
                             <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
                             <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
                         </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+                    </tr> -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-center">
+                <a
+                  href="javascript:void(0)"
+                  class="btn btn-success"
+                  id="xinzengfenlei"
+                  data-toggle="modal"
+                  data-target="#myModal"
+                  >新增分类</a
+                >
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
 
+    <!-- bootstrap模态框 -->
+    <div
+      class="modal fade"
+      id="myModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <!-- 使用隐藏域来储存文章分类id -->
+              <input type="hidden" name="id" id="cateid" />
+              <div class="form-group">
+                <label for="recipient-name" class="control-label"
+                  >文章分类名称</label
+                >
+                <input type="text" class="form-control" id="recipient-name" />
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="control-label"
+                  >文章分类别名</label
+                >
+                <textarea class="form-control" id="message-text"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-default"
+              data-dismiss="modal"
+              id="btn-Close"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-confirm">
+              Send message
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="./libs/http.js">
+   // 只对btn-confirm注册一次点击事件
+   $('#btn-confirm').on('click', function() {
+            if(dom == $('#xinzengfenlei')[0]){
+                let name = $("#recipient-name").val();
+                let slug = $("#message-text").val();
+                if (name == "" || slug == "") {
+              alert("请填写数据");
+              return;
+            }
+            $.post({
+              url: BigNew.category_add,
+              data: {
+                name: name,
+                slug: slug
+              },
+              success: function(res) {
+                // console.log(res);
+                $("#myModal").modal("hide");
+                if (res.code == 201) {
+                  getData();
+                }
+              }
+            });
+            } else {
+                let name = $("#recipient-name").val();
+            let slug = $("#message-text").val();
+            let id = $("#cateid").val();
+            $.post({
+                url : BigNew.category_edit,
+                data : {
+                    id : id,
+                    name : name,
+                    slug : slug
+                },
+                success : function(res) {
+                    // console.log(res);
+                    if(res.code == 200){
+                        $('#myModal').modal('hide');
+                        getData();
+                    }
+                    
+                }
+            })
+            }
+        })
+  </script>
+  <script type="text/html" id="categoryList">
+    {{each data}}
+        <tr>
+            <td>{{$value.name}}</td>
+            <td>{{$value.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-id="{{$value.id}}" data-toggle="modal" class=" btn btn-info btn-xs" data-target="#myModal">编辑</a>
+                <a href="javascript:void(0)" data-id="{{$value.id}}" class="btn btn-danger btn-xs">删除</a>
+            </td>
+        </tr>
+    {{/each}}
+  </script>
+  <script>
+    $(function() {
+      getData();
+      function getData() {
+        $.get({
+          url: BigNew.category_list,
+          success: function(res) {
+            let htmlStr = template("categoryList", res);
+            $("tbody").html(htmlStr);
+          }
+        });
+      }
+
+      // 当点击取消按钮是将表单元素内的内容重置
+      $("#btn-Close").on("click", function() {
+        $("form")[0].reset();
+      });
+
+      // 当模态框弹出是我们需要判断是那个按钮被点击
+      $("#myModal").on("show.bs.modal", function(e) {
+        let dom = e.relatedTarget; 
+        // console.log(dom);
+        if (dom == $("#xinzengfenlei")[0]) {
+          $("#exampleModalLabel").text("新增文章分类");
+          $("#btn-confirm").text("新增").addClass("btn-success").removeClass("btn-primary");
+          // 将表单中的数据全部重置，而reset()重置这个方法是原生对象的。
+          $("form")[0].reset();
+          // 注册点击事件
+          $("#btn-confirm").on("click", function() {
+            let name = $("#recipient-name").val();
+            let slug = $("#message-text").val();
+            if (name == "" || slug == "") {
+              alert("请填写数据");
+              return;
+            }
+            $.post({
+              url: BigNew.category_add,
+              data: {
+                name: name,
+                slug: slug
+              },
+              success: function(res) {
+                // console.log(res);
+                $("#myModal").modal("hide");
+                if (res.code == 201) {
+                  getData();
+                  // $.get({
+                  //     url : BigNew.category_list,
+                  //     success : function(res) {
+                  //        let htmlStr = template('categoryList', res);
+                  //        $('tbody').html(htmlStr);
+                  //     }
+                  // })
+                }
+              }
+            });
+          });
+        } else {
+          $("#exampleModalLabel").text("编辑文章分类");
+          $("#btn-confirm").text("编辑").addClass("btn-primary").removeClass("btn-success");
+          // 拿到id 
+          let cateId = $(dom).attr("data-id");
+        //   console.log(cateId);
+          $.get({
+            url: BigNew.category_search,
+            data: {
+              id: cateId
+            },
+            success: function(res) {
+            //   console.log(res);
+              if (res.code == 200) {
+                $("#recipient-name").val(res.data[0].name);
+                $("#message-text").val(res.data[0].slug);
+                $("#cateid").val(res.data[0].id);
+              }
+            }
+          });
+        //   注册点击事件
+          $("#btn-confirm").on("click", function() {
+            let name = $("#recipient-name").val();
+            let slug = $("#message-text").val();
+            let id = $("#cateid").val();
+            $.post({
+                url : BigNew.category_edit,
+                data : {
+                    id : id,
+                    name : name,
+                    slug : slug
+                },
+                success : function(res) {
+                    // console.log(res);
+                    if(res.code == 200){
+                        $('#myModal').modal('hide');
+                        getData();
+                    }
+                    
+                }
+            })
+            
+          });
+
+        }
+       
+      
+      });
+
+
+
+
+
+
+
+
+    });
+  </script>
 </html>
