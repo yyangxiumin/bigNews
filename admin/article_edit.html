@@ -1,72 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>文章列表</title>
-    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/iconfont.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/iconfont.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="./libs/jedate/css/jeDate-test.css" />
+    <link rel="stylesheet" href="./libs/jedate/css/jedate.css" />
     <!-- jq -->
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 模板引擎 -->
     <script src="./libs/template-web.js"></script>
-</head>
+    <!-- 引入jeDater日期插件js -->
+    <script src="./libs/jedate/js/jedate.js"></script>
+    <!-- 引入wangEidtor的js文件 -->
+    <script src="./libs/wangEditor.js"></script>
+  </head>
 
-<body>
+  <body>
     <div class="container-fluid">
-        <div class="common_title">
-            文章编辑
-        </div>
-        <div class="container-fluid common_con">
-            <form class="form-horizontal article_form" id="form">
-                <div class="form-group">
-                    <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
-                    <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
-                        <input name="cover" type="file" id="inputCover">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputCategory" class="col-sm-2 control-label">文章类别：</label>
-                    <div class="col-sm-4">
-                        <select class="form-control category" name="categoryId">
-                            <option>类别一</option>
+      <div class="common_title">
+        文章编辑
+      </div>
+      <div class="container-fluid common_con">
+        <form class="form-horizontal article_form" id="form">
+          <div class="form-group">
+            <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
+            <div class="col-sm-8">
+              <input
+                type="text"
+                name="title"
+                class="form-control title"
+                id="inputTitle"
+                value="文章标题文字"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputCover" class="col-sm-2 control-label"
+              >文章封面：</label
+            >
+            <div class="col-sm-10">
+              <img src="images/pic06.jpg" class="article_cover" />
+              <input name="cover" type="file" id="inputCover" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputCategory" class="col-sm-2 control-label"
+              >文章类别：</label
+            >
+            <div class="col-sm-4">
+              <select class="form-control category" name="categoryId">
+                <!-- <option>类别一</option>
                             <option>类别二</option>
                             <option>类别三</option>
                             <option selected>类别四</option>
-                            <option>类别五</option>
-                        </select>
-                    </div>
+                            <option>类别五</option> -->
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">发布时间：</label>
+            <div class="col-sm-2">
+                <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD" name="date">
+                <div class="icons jebtns" onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',zIndex:30000})">
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">发布时间：</label>
-                    <div class="col-sm-4">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
-                    <div class="col-sm-10">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success btn-edit">修改</button>
-                        <button type="submit" class="btn btn-default btn-draft">存为草稿</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
+            <div id="editor" class="col-sm-8">
+                    <p>请尽情的展示的文采</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-success btn-edit">
+                修改
+              </button>
+              <button type="submit" class="btn btn-default btn-draft">
+                存为草稿
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
+  <script src="./libs/http.js"></script>
+  <script type="text/html" id="categoryList">
+    {{each data}}
+    <option value="{{$value.id}}">{{$value.name}}</option>
+    {{/each}}
+  </script>
+  <script>
+    $(function() {
+      $("#inputCover").on("change", function() {
+        // 图片预览
+        let imgFile = this.files[0];
+        let url = URL.createObjectURL(imgFile);
+        $("img.article_cover").attr("src", url);
+      });
+      // 文章分类
+      $.get({
+        url: BigNew.category_list,
+        success: function(res) {
+        //   console.log(res);
+          let htmlStr = template("categoryList", res);
+          $("select.category").html(htmlStr);
+        }
+      });
+      // 添加时间插件
+      jeDate("#testico", {
+        format: "YYYY-MM-DD",
+        isTime: false,
+        minDate: "2014-09-19 00:00:00",
+        zIndex: 30000
+      });
+      // 添加富文本编辑器
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        editor.create()
 
+        // 根据id获取文章具体数据
+        let articleId = location.search.substring(4);
+        // console.log(articleId);
+        $.get({
+            url : BigNew.article_search,
+            data : {
+                id : articleId
+            },
+            success : function(res) {
+                // console.log(res);
+                if(res.code == 200){
+                    $('#inputTitle').val(res.data.title);
+                    $('img.article_cover').attr('src',res.data.cover);
+                    $('select.category').val(res.data.categoryId);
+                    $('#testico').val(res.data.date);
+                // 富文本编辑器获取内容
+                editor.txt.html(res.data.content);
+                }
+                
+            }
+        })
+
+        // 给修改按钮注册点击事件
+        $('button.btn-edit').on('click', function(e) {
+            // 阻止默认行为
+            e.preventDefault();
+
+            // console.log($('#form')[0]);
+            let fd = new FormData($('#form')[0]);
+            fd.append('content',editor.txt.html());
+            fd.append('state','已发布');
+            fd.append('id',articleId);
+            
+            // 发送ajax请求
+            $.post({
+              url : BigNew.article_edit,
+              data : fd,
+              processData : false,
+              contentType : false,
+              success : function(res) {
+                // console.log(res);
+                if(res.code == 200){
+                // 回到上一页
+                  window.history.back();
+                }
+                
+              }
+            })
+            
+        })
+
+        // 点击存为草稿
+        $('button.btn-draft').on('click', function(e) {
+            // 阻止默认行为
+            e.preventDefault();
+
+            // console.log($('#form')[0]);
+            let fd = new FormData($('#form')[0]);
+            fd.append('content',editor.txt.html());
+            // fd.append('state','已发布');
+            fd.append('id',articleId);
+            
+            // 发送ajax请求
+            $.post({
+              url : BigNew.article_edit,
+              data : fd,
+              processData : false,
+              contentType : false,
+              success : function(res) {
+                // console.log(res);
+                if(res.code == 200){
+                // 返回到上一页
+                  window.history.back();
+                }
+                
+              }
+            })
+            
+        })
+
+    });
+  </script>
 </html>
