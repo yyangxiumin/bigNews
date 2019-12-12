@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>文章列表</title>
-    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/reset.css">
-    <link rel="stylesheet" href="./css/iconfont.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/iconfont.css" />
+    <link rel="stylesheet" href="./css/main.css" />
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container-fluid">
-        <div class="common_title">
-            文章列表
-        </div>
-        <div class="container-fluid common_con">
-            <div class="row opt_btns">
-                <div class="col-xs-6">
-                    <form class="form-inline">
-                        <select id="selCategory" name="" class="form-control input-sm">
-                            <!-- <option value="">所有分类</option>
+      <div class="common_title">
+        文章列表
+      </div>
+      <div class="container-fluid common_con">
+        <div class="row opt_btns">
+          <div class="col-xs-6">
+            <form class="form-inline">
+              <select id="selCategory" name="" class="form-control input-sm">
+                <!-- <option value="">所有分类</option>
                             <option>未分类</option>
                             <option>奇趣事</option>
                             <option>会生活</option>
                             <option>爱旅行</option> -->
-                        </select>
-                        <select id="selStatus" name="" class="form-control input-sm">
-                            <option value="">所有状态</option>
-                            <option value="草稿">草稿</option>
-                            <option value="已发布">已发布</option>
-                        </select>
-                        <button id="btnSearch" class="btn btn-default btn-sm">筛选</button>
-                    </form>
-                </div>
-                <div class="col-xs-6">
-                    <a href="article_release.html" class="btn btn-success btn-sm pull-right" id="release_btn">发表文章</a>
-                </div>
-            </div>
-            <table class="table table-striped table-bordered table-hover mp20">
-                <thead>
-                    <tr>
-                        <th>标题</th>
-                        <th>作者</th>
-                        <th>分类</th>
-                        <th class="text-center">发表时间</th>
-                        <th class="text-center">状态</th>
-                        <th class="text-center" width="100">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- <tr>
+              </select>
+              <select id="selStatus" name="" class="form-control input-sm">
+                <option value="">所有状态</option>
+                <option value="草稿">草稿</option>
+                <option value="已发布">已发布</option>
+              </select>
+              <button id="btnSearch" class="btn btn-default btn-sm">
+                筛选
+              </button>
+            </form>
+          </div>
+          <div class="col-xs-6">
+            <a
+              href="article_release.html"
+              class="btn btn-success btn-sm pull-right"
+              id="release_btn"
+              >发表文章</a
+            >
+          </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover mp20">
+          <thead>
+            <tr>
+              <th>标题</th>
+              <th>作者</th>
+              <th>分类</th>
+              <th class="text-center">发表时间</th>
+              <th class="text-center">状态</th>
+              <th class="text-center" width="100">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
                         <td>王积千造统最头</td>
                         <td>杰克</td>
                         <td>奇趣事</td>
@@ -66,23 +72,26 @@
                             <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
                         </td>
                     </tr> -->
-                </tbody>
-            </table>
-            <div class="row text-center">
-            </div>
+          </tbody>
+        </table>
+        <div class="row text-center">
+          <ul id="pagination-demo" class="pagination-sm"></ul>
         </div>
+      </div>
     </div>
-</body>
-<script src="./libs/http.js"></script>
-<!-- 下拉列表模板 -->
-<script type="text/html" id="categoryList">
+  </body>
+  <script src="./libs/http.js"></script>
+  <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="./libs/jquery.twbsPagination.js"></script>
+  <!-- 下拉列表模板 -->
+  <script type="text/html" id="categoryList">
     <option value="">所有分类</option>
     {{each data}}
     <option value="{{$value.id}}">{{$value.name}}</option>
     {{/each}}
-</script>
-<!-- 文章条目模板 -->
-<script type="text/html" id="artList">
+  </script>
+  <!-- 文章条目模板 -->
+  <script type="text/html" id="artList">
     {{each data.data}}
     <tr>
         <td>{{$value.title}}</td>
@@ -91,48 +100,115 @@
         <td class="text-center">{{$value.date}}</td>
         <td class="text-center">{{$value.state}}</td>
         <td class="text-center">
-            <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+            <a href="article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs">编辑</a>
             <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
         </td>
     </tr>
     {{/each}}
-</script>
+  </script>
 
-<script>
-$(function(){
-    $.get({
-        url : BigNew.category_list,
-        success : function(res) {
-            if(res.code == 200){
-                let htmlStr = template('categoryList', res);
-                $('#selCategory').html(htmlStr);
+  <script>
+    // 当页面一加载就需要将文章类别信息和文章条目信息展示在页面
+    $(function () {
+        //获取文章类别信息
+        $.get({
+            url: BigNew.category_list,
+            success: function (res) {
+                // console.log(res);
+                if (res.code == 200) {
+                    let htmlStr = template('categoryList', res)
+                    $('#selCategory').html(htmlStr)
+                }
             }
+        });
+        // 封装一个获取数据的方法
+        function getData(pages, callback) {
+            $.get({
+                url: BigNew.article_query,
+                data: {
+                    type: $('#selCategory').val(),
+                    state: $('#selStatus').val(),
+                    page: pages,
+                    perpage: perpage
+                },
+                success: function (res) {
+                    // console.log(res);
+                    let htmlStr = template('artList', res);
+                    $('tbody').html(htmlStr);
+                    //我们获取到数据之后，我们还需要在这里写代码处理，所以我们使用一个函数，使用回调
+                    if (res.data.data.length != 0 && callback != null) {
+                        $('#pagination-demo').show();
+                        $('#tips').hide();
+                        callback(res)
+                    } else if(res.data.totalPage != 0 && res.data.data.length == 0 && res.data.totalPage == mypage -1 ) {
+                        mypage -= 1;
+                        $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, mypage)
+                    } else {
+                        $('#pagination-demo').hide();
+                        $('#tips').show();
+                    }
+                }
+            });
         }
+
+        //定了两个变量，用来表示页码和条数
+        let mypage = 1;
+        let perpage = 10;
+        //页面一加载就展示文章条目数据
+        getData(mypage, function (res) {
+            $('#pagination-demo').twbsPagination({
+                totalPages: res.data.totalPage,
+                visiblePages: 7,
+                first: '首页',
+                prev: '上一页',
+                next: '下一页',
+                last: '尾页',
+                onPageClick: function (event, page) {
+                    mypage = page;
+                    getData(mypage, function(){});  
+                }
+            });
+        })
+
+        //筛选按钮注册点击事件
+        $('#btnSearch').on('click', function (e) {
+            //阻止默认行为
+            e.preventDefault();
+
+            // 点击按钮的时候获取文章类型和文章状态
+            // let type = $('#selCategory').val();
+            // let state = $('#selStatus').val()
+            getData(mypage, function (res) {
+                //搜索到的数据条目是不一样的，所以总的页数是会动态改变的
+                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
+            });
+        })
+
+
+        //删除文章  删除是动态生成的，需要使用事件委托来注册
+        $('tbody').on('click', '.delete', function () {
+            let artId = $(this).attr('data-id');
+            // console.log(mypage);
+            if (confirm('你确定要删除吗？')) {
+                $.post({
+                    url: BigNew.article_delete,
+                    data: {
+                        id: artId
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        // window.location.reload();
+                        if (res.code == 204) {
+                            getData(mypage, function (res) {
+                                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, mypage)
+                            })
+                        }
+                    }
+                })
+            }
+        })
+
     })
-    
-    let mypage = 1;
-    let perpage = 10;
-    $.get({
-        url : BigNew.article_query,
-        data : {
-            type : $('#selCategory').val(),
-            state : $('#selStatus').val(),
-            page : mypage,
-            perpage : perpage,
-        },
-       success : function(res) {
-        //    console.log(res);
-        if(res.code == 200){
-            let html = template('artList', res);
-            $('tbody').html(html);
-        }
-       }
-    })
-
-
-
-
-})
 </script>
 
 </html>
